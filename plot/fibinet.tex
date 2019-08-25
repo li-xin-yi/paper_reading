@@ -1,0 +1,61 @@
+%!TEX program = xelatex
+\documentclass[tikz]{standalone}
+\usetikzlibrary{arrows.meta}
+\usetikzlibrary{arrows,positioning,decorations.pathmorphing,decorations.markings}
+\begin{document}
+
+\tikzset{
+    punkt/.style={
+           rectangle,
+           rounded corners,
+           draw=black, very thick,
+           minimum height=4em,
+           text centered},
+}
+
+{\LARGE
+\begin{tikzpicture}[decoration={markings,mark=at position 1 with {\arrow[scale=2]{angle 90}};}]
+  \node[punkt,text width=8em] (E) at (0,-2) {input: $E$: $(f \times k)$};
+  \node[rectangle,draw=black, very thick,text width=4em,minimum height=2em,text centered] (pool) at (0,-6) {max pool};
+  \node[punkt,text width=8em,minimum height=2em] (Z) at (0,-9) {$Z$: $(f \times 1)$};
+  \node[punkt,text width=6em,minimum height=2em] (Z1) at (0,-12) {$(f/r \times 1)$};
+  \node[punkt,text width=8em,minimum height=2em] (A) at (0,-15) {$A$:$(f \times 1)$};
+  \node[circle,minimum size=0.04,draw=black, very thick,label=right:Re-Scale] (multiply) at (0, -17) {$\times$};
+  \node[punkt,text width=8em,minimum height=4em] (V) at (0,-20) {$V$:$(f \times k)$};
+
+  \node[punkt,text width=8em,minimum height=8em] (bilinear1) at (10,-6) {
+  $\forall i<j  \\ e_i \cdot W \odot e_j \to p_{i,j} \in R^k$};
+
+  \node[punkt,text width=8em,minimum height=8em] (bilinear2) at (10,-15) {
+  $\forall i<j  \\ v_i \cdot W \odot v_j \to q_{i,j} \in R^k$};
+
+  \node[punkt,text width=10em] (P) at (20,-6) {$p$: $(n \times k)$};
+  \node[punkt,text width=10em] (Q) at (20,-15) {$q$: $(n \times k)$};
+  \node[circle,minimum size=0.04,draw=black, very thick,label=left:concat] (add) at (20, -10) {$+$};
+  \node[rectangle,draw=black, very thick,text width=10em,minimum height=8em,text centered] (dnn) at (28,-10) {DNN};
+
+  \draw[->,thick] (E) -- (pool);
+  \draw[->,thick] (pool)-- (Z);
+  \draw[->,thick] (Z) -- (Z1) node[midway,right] {$\cdot W_1 \in R^{f\times f/r}$};
+  \draw[->,thick] (Z1) -- (A) node[midway,right] {$\cdot W_2 \in R^{f/r \times f}$};
+  \draw[->,thick] (A) -- (multiply);
+  \draw[->,thick] (multiply) -- (V);
+  \draw (E) edge[->,bend right=90,thick] (multiply);
+
+  \draw[->,thick] (E) -- (bilinear1);
+  \draw[->,thick] (V) -- (bilinear2);
+
+  \draw[->,thick] (bilinear1) -- (P);
+  \draw[->,thick] (bilinear2) -- (Q);
+
+  \draw[->,thick] (P) -- (add);
+  \draw[->,thick] (Q) -- (add);
+
+  \draw[->,thick] (add) -- (dnn) node[above,midway] {$c$:$(2n \times k)$};
+  \draw[->,thick] (dnn) -- (34,-10) node[above,midway] {output};
+
+  \draw[thick,dashed,gray] (-4,-5) node[above]{SENET} rectangle (4,-18);
+  \draw[thick,dashed,gray] (7,-3) node[above]{Bilinear Interaction Layer}rectangle (13,-20);
+\end{tikzpicture}
+}
+\end{document}
