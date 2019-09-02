@@ -14,7 +14,7 @@ ONN全称Operation-aware Neural Networks，是在[Operation-aware Neural Network
 
 ![](onn_arch.png)
 
-输入为经过one-hot encode的$m$个稀疏特征$[x_1,x_2,\ldots,x_m]$，一般的embedding处理会给每个$x_i$指定一个系数矩阵$V_i$，这一层的输出结果$[e_1,e_2,\ldots,e_m]$其中$e_i=V_i x_i$，而ONN则对$x_i$特征将要参与的每个操作分开训练embedding的系数，如果$x_i$要参与$l$个操作，那么$x_i$经过embedding的计算结果为$l$个中间向量即 $$[e_i^1,e_i^2,\ldots,e_i^l]=[V^{i,1}x_i,V^{i,2}x_i,\ldots,V^{i,l}x_i]$$这些$[V^{i,1},V^{i,2},\ldots,V^{i,l}]$需要在训练时分别获得。文中把第$i$个特征与第$j$个特征的内积操作，与第$i$个特征与第$j$个特征的内积，视为不同的操作，需要分配不同的$V$
+输入为经过one-hot encode的$m$个稀疏特征$[x_1,x_2,\ldots,x_m]$，一般的embedding处理会给每个$x_i$指定一个系数矩阵$V_i$，这一层的输出结果$[e_1,e_2,\ldots,e_m]$其中$e_i=V_i x_i$，而ONN则对$x_i$特征将要参与的每个操作分开训练embedding的系数，如果$x_i$要参与$l$个操作，那么$x_i$经过embedding的计算结果为$l$个中间向量即 $$[e_i^1,e_i^2,\ldots,e_i^l]=[V^{i,1}x_i,V^{i,2}x_i,\ldots,V^{i,l}x_i]$$这些$[V^{i,1},V^{i,2},\ldots,V^{i,l}]$需要在训练时分别获得。文中把第$i$个特征与第$j$个特征的内积操作，与第$i$个特征与第$k$个特征的内积，视为不同的操作，需要分配不同的$V$
 
 ![](embed_comp.png)
 
@@ -27,11 +27,11 @@ FM的embedding层并没有对特征区分不同的操作，embedding之后即�
 
 FFM相比FM在embedding层加入了文中的operation-aware操作，即对每次不同的内积操作，同一个特征的embedding方法是不同的。但相比ONN没有deep部分以及embedding的原始结果作为deep部分的输入，所以表现力还是有所欠缺。
 
-![ffm][graph/ffm.png]
+![ffm](graph/ffm.png)
 
 与ONN最相似的还是PNN的结构，除了ONN在embedding层没有对后续的不同操作作出区分，而ONN根据后续用以不同的操作区分生成了很多不同的embedding向量。
 
-![pnn][graph/pnn.png]
+![pnn](graph/pnn.png)
 
 ## 源码阅读
 
